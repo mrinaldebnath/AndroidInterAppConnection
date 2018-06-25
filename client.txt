@@ -1,0 +1,113 @@
+package com.example.omnia.testimportexternaldata;
+
+import android.app.ActivityManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+
+import java.util.List;
+
+import static android.app.ActivityManager.RECENT_IGNORE_UNAVAILABLE;
+import static android.app.ActivityManager.RECENT_WITH_EXCLUDED;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        final Button buttonclick = (Button) findViewById(R.id.Click);
+
+        buttonclick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                displayAnother();
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == 1) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+
+                String result=data.getStringExtra("result");
+                Button buttonclick = (Button) findViewById(R.id.Click);
+                buttonclick.setText(result);
+
+                // The user picked a contact.
+                // The Intent's data Uri identifies which contact was selected.
+
+                // Do something with the contact here (bigger example below)
+            }
+        }
+    }
+
+
+    private void displayAnother() {
+
+
+//        final PackageManager pm = getPackageManager();
+////get a list of installed apps.
+//        List<ApplicationInfo> tasks = pm.getInstalledApplications(PackageManager.GET_META_DATA);
+//        String TAG="msg";
+//        for (ApplicationInfo packageInfo : tasks) {
+//            Log.d(TAG, "Installed package :" + packageInfo.packageName);
+//            Log.d(TAG, "Source dir : " + packageInfo.sourceDir);
+//            Log.d(TAG, "Launch Activity :" + pm.getLaunchIntentForPackage(packageInfo.packageName));
+//        }
+
+
+//        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+//        List<ActivityManager.RunningTaskInfo> tasks = activityManager.getRunningTasks(Integer.MAX_VALUE);
+
+//        int h=1;
+//
+//        for (int i = 0; i < tasks.size(); i++) {
+//
+//            if(tasks.get(i).baseActivity.getPackageName().equals("com.example.omnia.testimportexternaldata"))h=0;
+//
+//           // Log.d("Running task", "Running task: " + tasks.get(i).baseActivity.toShortString() + "\t\t ID: " + tasks.get(i).id);
+//        }
+//
+//        int y=h;
+
+//        Intent sendIntent = new Intent();
+//        sendIntent.setAction(Intent.ACTION_SEND);
+//        sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+//        sendIntent.setType("text/plain");
+//        //startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.app_name)));
+//        //startActivity(sendIntent);
+//        startActivityForResult(sendIntent,1);
+
+
+        String fullUrl = "https://m.facebook.com/sharer.php?u=..";
+        try {
+            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+            sharingIntent.setClassName("com.example.omnia.MyCalculator",
+                    "com.example.omnia.MyCalculator.MainActivity");
+            sharingIntent.putExtra(Intent.EXTRA_TEXT, "your title text");
+            sharingIntent.setType("text/plain");
+            startActivityForResult(sharingIntent,1);
+        } catch (Exception e) {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(fullUrl));
+            startActivity(i);
+
+
+        }
+
+    }
+}
